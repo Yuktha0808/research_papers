@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "research_papers"
+version = "0.1.0"
+description = "Fetch research papers from PubMed"
+authors = ["Your Name"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.26.0"
+
+[tool.poetry.scripts]
+get-papers-list = "cli:main"
