@@ -7,12 +7,14 @@ PUBMED_API_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 PUBMED_SUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
 
 def fetch_paper_ids(query: str) -> List[str]:
+    """Fetch paper IDs from PubMed based on search query."""
     params = {"db": "pubmed", "term": query, "retmode": "json", "retmax": 10}
     response = requests.get(PUBMED_API_URL, params=params)
     response.raise_for_status()
-    return response.json().get("esearchresult", {}).get("idlist", [])
+    return response.json().get("researchresult", {}).get("idlist", [])
 
 def fetch_paper_details(paper_ids: List[str]) -> List[Dict]:
+    """Fetch metadata of papers using paper IDs."""
     if not paper_ids:
         return []
 
@@ -26,6 +28,7 @@ def fetch_paper_details(paper_ids: List[str]) -> List[Dict]:
     for paper_id in paper_ids:
         paper = data.get("result", {}).get(paper_id, {})
         authors = paper.get("authors", [])
+        
         non_academic_authors = [
             a['name'] for a in authors if not re.search(r"(university|lab|college)", a.get("affiliation", "").lower())
         ]
@@ -45,7 +48,8 @@ def fetch_paper_details(paper_ids: List[str]) -> List[Dict]:
     return results
 
 def save_to_csv(papers: List[Dict], filename: str):
-    with open(filename, "w", newline="") as file:
+    """Save the list of papers to a CSV file with UTF-8 encoding."""
+    with open(filename, "w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=papers[0].keys())
         writer.writeheader()
         writer.writerows(papers)
