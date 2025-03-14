@@ -42,3 +42,7 @@
 
 #3 Save Results to CSV
 --> poetry run get-papers-list "diabetes treatment" -f results.csv
+
+
+
+I used an LLM to clarify the project structure, debug CSV encoding errors, and improve CLI functionality. I asked follow-up questions to refine the output format and added better exception handling based on AI recommendations.
